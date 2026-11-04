@@ -39,3 +39,37 @@
 .console[data-status=idle] .beacon span{animation:none;opacity:1;background:radial-gradient(ellipse,#a58a43,#624715);box-shadow:none}
 @keyframes alarmBreath{0%,100%{opacity:.7}50%{opacity:1}}
 @media(prefers-reduced-motion:reduce){.console .beacon span{animation:none!important;opacity:1}}
+/* Cinco níveis de aviso a partir de 50; a faixa normal mantém o painel verde. */
+.console[data-tier=attention] .main-screen{box-shadow:inset 0 0 12px #ffe36a25,0 3px 4px #0008}
+.console[data-tier=warning] .beacon span{animation:alarmBreath 3s ease-in-out infinite}
+.console[data-tier=warning] .status-band strong{background:#ffc250;border-color:#ffdf8c;box-shadow:0 0 18px #ffb34755}
+.console[data-tier=alert] .beacon span{background:radial-gradient(ellipse,#ffe0a8 0,#ff8c24 35%,#a73809 100%);box-shadow:0 0 22px #ff8c24aa}
+.console[data-tier=alert] .status-band strong{background:#ce641a;border-color:#ffa04a;color:#fff6d9}
+.console[data-tier=alert] [data-lamp=alert] .lamp{background:radial-gradient(circle at 35% 30%,#ffe5ae,#ff942c 40%,#b74611 70%);box-shadow:0 0 0 2px #928057,0 0 22px #ff982777}
+.console[data-tier=overload] .status-band strong{background:#bd3826;border-color:#ff8a68;box-shadow:0 0 20px #ff573455}
+.console[data-tier=critical] .status-band strong{background:#a7192d;border-color:#ff6979;box-shadow:0 0 24px #ff385466}
+.console[data-tier=critical] .hazard{background:repeating-linear-gradient(120deg,#ff4964 0 8px,transparent 9px 15px)}
+.primary .status-band strong{font-size:clamp(14px,1.6vw,21px)}
+.tier-table{width:100%;border-collapse:collapse;font-size:12px;margin:14px 0;color:#dddcc4}.tier-table caption{text-align:left;color:#e5dcb5;font-weight:bold;font-size:15px;padding-bottom:10px}.tier-table th,.tier-table td{text-align:left;padding:9px 5px;border-bottom:1px solid #616b4d}.tier-table th{font-size:10px;text-transform:uppercase;color:#aab99c}.tier-table td:first-child{white-space:nowrap;font-family:monospace;color:#ffd78b}.tier-table td:nth-child(2){font-weight:bold}
+@media(min-width:701px) and (max-height:650px){.primary .status-band strong{font-size:13px;letter-spacing:.6px}.primary p{font-size:9px}}
+@media(max-width:700px){.primary .status-band strong{font-size:14px;letter-spacing:.4px;padding:5px}.status-band{gap:5px}.status-band .hazard{width:24px}.tier-table{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.console[data-tier] .beacon span{animation:none!important}}
+/* Vermelho intermitente nas faixas 80–89 e 90–100. */
+.console:is([data-tier=overload],[data-tier=critical]) .beacon span{animation:redAlarmBlink var(--alarm-speed) ease-in-out infinite}
+.console:is([data-tier=overload],[data-tier=critical]) .beacon.right span{animation-delay:calc(var(--alarm-speed) * -.5)}
+.console:is([data-tier=overload],[data-tier=critical]) [data-lamp=alert] .lamp{animation:redLampBlink var(--alarm-speed) ease-in-out infinite}
+@keyframes redAlarmBlink{0%,35%,100%{opacity:1;filter:brightness(1.15)}50%,85%{opacity:.18;filter:brightness(.45)}}
+@keyframes redLampBlink{0%,35%,100%{filter:brightness(1.15);box-shadow:0 0 0 2px #928057,0 0 24px #ff4428bb,inset 0 0 5px #ffb7a5}50%,85%{filter:brightness(.38);box-shadow:0 0 0 2px #928057,0 0 2px #ff442822,inset 0 0 5px #ffb7a533}}
+@media(prefers-reduced-motion:reduce){.console[data-tier] .beacon span,.console[data-tier] [data-lamp=alert] .lamp{animation:none!important;opacity:1;filter:none}}
+/* Escalada coordenada: mais circuitos sinalizam, sem fazer a tela inteira piscar. */
+.console[data-tier=warning] .beacon.left span{animation:alarmBreath 3s ease-in-out infinite}
+.console[data-tier=warning] .beacon.right span{animation:none}
+.console[data-tier=alert] .beacon span{animation:alarmBreath 2.4s ease-in-out infinite}
+.console[data-tier=alert] .beacon.right span{animation-delay:-1.2s}
+.telemetry .mini-label::before{content:'';display:inline-block;width:4px;height:4px;margin-right:5px;border-radius:50%;vertical-align:middle;background:#4e9c59;box-shadow:0 0 3px #5bdb6a44}
+.console[data-tier=critical] .telemetry .mini-label::before,.console[data-tier=critical] .live-dot{background:#ff6c59;box-shadow:0 0 5px #ff614c77;animation:pilotAlarm 2s ease-in-out infinite}
+.console[data-tier=critical] .telemetry .stat:nth-child(2) .mini-label::before{animation-delay:-.4s}
+.console[data-tier=critical] .telemetry .stat:nth-child(3) .mini-label::before{animation-delay:-.8s}
+.console[data-tier=critical] .live-dot{animation-delay:-1.2s}
+@keyframes pilotAlarm{0%,35%,100%{opacity:.95}55%,85%{opacity:.2}}
+@media(prefers-reduced-motion:reduce){.console[data-tier] .beacon span,.console[data-tier] .telemetry .mini-label::before,.console[data-tier] .live-dot{animation:none!important;opacity:1}}

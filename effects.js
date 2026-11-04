@@ -1,12 +1,13 @@
 /* Visual de avaria: apenas animação local, sem áudio e sem alterar a medição. */
 (function (scope) {
   'use strict';
+  const levels = typeof module !== 'undefined' && module.exports ? require('./levels.js') : scope.BunkerLevels;
   function advanceDamage(heat, dt, status, enabled, active, calibrating) {
     if (!enabled || !active || calibrating) return 0;
     const seconds = Math.max(0, Math.min(dt, 250)) / 1000;
-    if (status === 'alert') return Math.min(1, heat + seconds * .065);
-    if (status === 'attention') return heat < .22 ? Math.min(.22, heat + seconds * .045) : Math.max(.22, heat - seconds * .07);
-    return Math.max(0, heat - seconds * .14);
+    const target = levels.forId(status)?.heat || 0;
+    if(heat < target) return Math.min(target,heat+seconds*.2);
+    return Math.max(target,heat-seconds*.16);
   }
   function damageStage(heat) { return heat >= .88 ? 'critical' : heat >= .48 ? 'overload' : heat >= .08 ? 'warm' : 'stable'; }
   if (typeof module !== 'undefined' && module.exports) { module.exports = { advanceDamage, damageStage }; return; }
@@ -52,7 +53,7 @@
       this.heat = advanceDamage(this.heat, dt, status, this.enabled, active, calibrating);
       const stage = damageStage(this.heat); this.present(stage, active && status === 'normal' && this.heat >= .08);
       if (!this.ctx) return;
-      if (!this.enabled || !active || calibrating || this.motion.matches || this.heat < .01) {
+      if (!this.enabled || !active || calibrating || this.motion.matches || this.heat < .08) {
         this.particles.length = 0; this.sparks.length = 0; this.spawn = 0; this.clear(); this.lastDraw = now; return;
       }
       if (now - this.lastDraw < 33) return;
@@ -80,7 +81,7 @@
         this.ctx.drawImage(this.smoke,-size,-size,size*2,size*2); this.ctx.restore();
       }
       this.sparkClock += seconds;
-      if (this.heat > .48 && status === 'alert' && this.sparkClock > .65 && this.sparks.length < 24) {
+      if (this.heat > .48 && ['overload','critical'].includes(status) && this.sparkClock > .65 && this.sparks.length < 24) {
         this.sparkClock = 0; const v = vents[2+Math.floor(Math.random()*2)];
         for(let i=0;i<6;i++) this.sparks.push({x:v[0],y:v[1],vx:(Math.random()-.5)*w*.23,vy:-25-Math.random()*75,age:0,life:.35+Math.random()*.5});
       }
