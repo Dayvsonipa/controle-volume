@@ -28,3 +28,10 @@ Sirva a raiz do repositório como site estático em HTTPS. Não exige banco de d
 4. Confirme o envio (commit).
 
 O arquivo index.html já está na raiz para facilitar a hospedagem estática. Não há etapa de compilação, variáveis de ambiente ou banco de dados.
+
+## Efeitos de avaria
+Com efeitos ativados, o amarelo aquece a central e inicia uma fumaça leve. Um alerta vermelho contínuo acumula avaria: fumaça mais densa, faíscas, brilho de superaquecimento, interferência suave nas telas e fissuras visuais. A pane crítica começa após aproximadamente 14 segundos de vermelho. O retorno ao normal resfria o sistema e dissipa os efeitos; pausa, calibração e nova sessão zeram a avaria. Os efeitos nunca alteram o nível medido ou bloqueiam os controles.
+
+Na demonstração, o botão **Testar pane** seleciona um nível simulado de 95 e mostra a pane imediatamente. Reduza o controle para acompanhar a recuperação. Em **Ajustes**, é possível desligar os efeitos; essa preferência fica salva no navegador. A preferência do sistema por movimento reduzido desativa fumaça animada, faíscas, tremor e interferência, preservando a indicação estática de estado.
+
+O arquivo `effects.js` deve acompanhar `app.js`, `style.css` e `index.html` na raiz. Para testar a progressão e a recuperação da pane: `node tests/damage.cjs`.

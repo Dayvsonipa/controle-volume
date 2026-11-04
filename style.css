@@ -9,3 +9,33 @@
 @media(min-width:701px) and (max-height:850px){.primary h2.conversation-title{font-size:17px;letter-spacing:1px;margin:2px 0}}
 @media(min-width:701px) and (max-height:650px){.primary h2.conversation-title{font-size:14px;line-height:1.1;margin:1px 0}.reading strong{font-size:40px}.status-band{margin:2px 0}.primary p{min-height:23px;margin-bottom:2px}}
 @media(max-width:700px){.primary h2.conversation-title{font-size:17px;letter-spacing:.7px;margin:2px 0}.reading strong{font-size:58px}}
+/* Avaria cinematográfica: a camada decorativa não captura cliques. */
+.console{isolation:isolate;overflow:hidden;--damage:0}
+.damage-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:4;pointer-events:none;border-radius:inherit}
+.damage-wash{position:absolute;inset:0;z-index:3;pointer-events:none;border-radius:inherit;opacity:var(--damage);box-shadow:inset 0 0 40px 4px #fb521830,inset 0 -12px 24px #ac270829;transition:opacity .5s}
+.cracked-glass{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;opacity:0;transition:opacity 2s}
+.cracked-glass path{fill:none;stroke:#d2f3d8;stroke-width:.8;filter:drop-shadow(1px 1px 0 #000)}
+.console[data-damage=overload] .telemetry .crt,.console[data-damage=critical] .telemetry .crt{animation:crtInterference 6s ease-in-out infinite}
+.console[data-damage=critical] .main-screen>.bezel{animation:equipmentRattle 5s ease-in-out infinite}
+.console[data-damage=critical] .cracked-glass{opacity:.32}
+.console[data-damage=critical] .damage-wash{box-shadow:inset 0 0 60px 8px #f8482940,inset 0 -12px 24px #ac270844}
+.console[data-damage=overload] #thermalStatus{color:#ffc16d}
+.console[data-damage=critical] #thermalStatus{color:#ffb6a3;text-shadow:0 0 8px #ff422877}
+#thermalStatus{font-size:9px;letter-spacing:1.2px;line-height:1.25}
+.effect-setting{display:flex;align-items:center;gap:10px;margin-top:22px;font-size:14px;line-height:1.4}.effect-setting input{width:18px;height:18px;accent-color:#a2bf70;flex:none}
+.damage-test{white-space:nowrap;color:#ffd1a1;border:1px solid #94724a;border-radius:3px;background:#392d1e;padding:6px 8px;font:bold 9px monospace}
+@keyframes crtInterference{0%,60%,100%{filter:brightness(1);transform:translateX(0)}63%,68%{filter:brightness(.83);transform:translateX(.5px)}73%{filter:brightness(.94);transform:translateX(-.5px)}}
+@keyframes equipmentRattle{0%,58%,72%,100%{transform:translate(0,0)}61%{transform:translate(.8px,.4px)}65%{transform:translate(-.8px,0)}69%{transform:translate(.4px,-.4px)}}
+@media(min-width:701px) and (max-width:900px){#thermalStatus{font-size:7px;letter-spacing:.6px}.demo-panel{gap:6px}.demo-panel small{display:none}.damage-test{font-size:8px;padding:5px}.demo-panel label{font-size:8px}}
+@media(max-width:700px){#thermalStatus{font-size:6px;letter-spacing:.4px}.demo-panel .damage-test{margin-left:auto}.demo-panel small{display:none}}
+@media(prefers-reduced-motion:reduce){.damage-canvas{display:none}.console .telemetry .crt,.console .main-screen>.bezel{animation:none!important}.cracked-glass{transition:none}}
+/* Os dois sinalizadores superiores respondem à condição e à intensidade do som. */
+.console{--sound:0;--alarm-speed:2.5s}
+.beacon span{transition:background .6s,box-shadow .6s;animation:none}
+.console[data-status=normal] .beacon span{background:radial-gradient(ellipse,#c8ffbd 0,#63d957 38%,#164c1f 100%);box-shadow:0 0 16px #62ed5377;opacity:calc(.5 + var(--sound)*.5)}
+.console[data-status=attention] .beacon span{background:radial-gradient(ellipse,#fff4aa 0,#ffb91d 38%,#9b4e05 100%);box-shadow:0 0 18px #ffbe3399;opacity:calc(.6 + var(--sound)*.4)}
+.console[data-status=alert] .beacon span{background:radial-gradient(ellipse,#ffd2c8 0,#ff2519 32%,#a50009 100%);box-shadow:0 0 22px #ff1919cc;animation:alarmBreath var(--alarm-speed) ease-in-out infinite}
+.console[data-status=alert] .beacon{box-shadow:0 0 0 2px #9b8350,inset 0 0 12px #000,0 4px 6px #000,0 0 20px #f922223f}
+.console[data-status=idle] .beacon span{animation:none;opacity:1;background:radial-gradient(ellipse,#a58a43,#624715);box-shadow:none}
+@keyframes alarmBreath{0%,100%{opacity:.7}50%{opacity:1}}
+@media(prefers-reduced-motion:reduce){.console .beacon span{animation:none!important;opacity:1}}
